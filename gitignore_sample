@@ -1,0 +1,6 @@
+.terraform*
+*.tfstate*
+*.retry
+*.kitchen
+.DS_Store
+var_values.auto.tfvars
