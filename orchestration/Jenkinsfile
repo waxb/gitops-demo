@@ -48,7 +48,7 @@ node() {
       }
       dir("configuration") {
         stage('ansible roles') {
-          sh 'ansible-galaxy install -r requirements.yml -p roles/'
+          sh 'ansible-galaxy install -r requirements.yaml -p roles/'
           sh 'tree'
         }
         stage('ansible play') {

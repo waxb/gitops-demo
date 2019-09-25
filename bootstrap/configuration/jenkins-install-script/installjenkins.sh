@@ -8,8 +8,7 @@ sudo yum install jenkins -y
 sudo systemctl start jenkins
 systemctl status jenkins && sudo systemctl enable jenkins
 
-sudo yum install ansible -y
+sudo yum install ansible git -y
 wget https://releases.hashicorp.com/terraform/0.12.9/terraform_0.12.9_linux_amd64.zip
 sudo unzip ./terraform_0.12.9_linux_amd64.zip -d /usr/local/bin/
 
-openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
