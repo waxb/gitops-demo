@@ -1,0 +1,2 @@
+- src: git+https://github.com/waxb/ans_rol_apache.git
+  version: 1.0.0
