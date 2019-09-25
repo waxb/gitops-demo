@@ -6,9 +6,7 @@ module "rg" {
   location = var.location
   name     = "demo-rg"
 
-  tags {
-    tag = demo
-  }
+  tags     = ["demo"]
 }
 
 resource "azurerm_public_ip" "lb-pip" {
