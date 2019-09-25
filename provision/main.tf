@@ -66,3 +66,7 @@ module "vm_apps" {
 
   group_name = "app_servers"
 }
+
+output "lb-pip-out" {
+  value = azurerm_public_ip.lb-pip.ip_address
+}
