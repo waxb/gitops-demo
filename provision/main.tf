@@ -35,6 +35,7 @@ module "avset" {
   source  = "git::https://github.com/waxb/tf-as-azure.git"
 
   location                = var.location
+  rg_name   = module.rg.name
 
   availability_set_name   = "app_server_avset"
   pfdc                    = 2
