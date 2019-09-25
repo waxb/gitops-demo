@@ -1,0 +1,57 @@
+//from repo
+node() {
+  cleanWs()
+  withCredentials(
+    [
+      azureServicePrincipal(
+        credentialsId: "infrabuilder",
+        clientIdVariable: 'ARM_CLIENT_ID',
+        clientSecretVariable: 'ARM_CLIENT_SECRET',
+        subscriptionIdVariable: 'ARM_SUBSCRIPTION_ID',
+        tenantIdVariable: 'ARM_TENANT_ID'
+      )
+    ]
+  ) {
+    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
+      stage('checkout infra') {
+        checkout(
+          [
+            $class: 'GitSCM',
+            branches: [
+              [name: '*/master']
+            ],
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [],
+            submoduleCfg: [],
+            userRemoteConfigs: [
+              [url: 'https://github.com/waxb/gitops-demo.git']
+            ]
+          ]
+        )
+        echo "infrastructure code checked out!"
+      }
+      sh 'tree'
+      withCredentials([string(credentialsId: 'stgacc', variable: 'ARM_ACCESS_KEY')]) {
+        dir("provision") {
+          stage('terraform get') {
+            sh 'terraform get -update'
+          }
+          stage('terraform init') {
+            sh 'terraform --version'
+            sh 'terraform init'
+            sh 'tree'
+          }
+          stage('terraform apply') {
+            sh 'terraform apply -auto-approve'
+          }
+        }
+      }
+      dir("configuration") {
+        stage('ansible play') {
+          sh 'ansible-playbook -i ../provision/inventory play.yaml'
+        }
+      }
+      cleanWs()
+    }
+  }
+}
