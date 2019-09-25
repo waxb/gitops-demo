@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "rg" {
-  name      = local.env_name
-  location  = local.location
+  name      = demo-rg
+  location  = var.location
 }
 
 resource "azurerm_public_ip" "lb-pip" {
