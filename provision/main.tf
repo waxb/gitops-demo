@@ -1,17 +1,11 @@
-module "rg" {
-  source  = "adfinis-forks/resource-group/azurerm"
-  version = "0.0.0"
-
-
-  location = var.location
-  name     = "demo-rg"
-
-  tags     = ["demo"]
+resource "azurerm_resource_group" "rg" {
+  name      = local.env_name
+  location  = local.location
 }
 
 resource "azurerm_public_ip" "lb-pip" {
   name                = "lb-pip"
-  resource_group_name = module.rg.name
+  resource_group_name = azurerm_resource_group.rg.name
   location            = var.location
   allocation_method   = "Static"
 }
@@ -19,7 +13,7 @@ resource "azurerm_public_ip" "lb-pip" {
 module "loadbalancer" {
   source = "git::https://github.com/waxb/tf-lb-azure.git"
   #global definition
-  rg_name   = module.rg.name
+  rg_name   = azurerm_resource_group.rg.name
   location  = var.location
   subnet_id = var.subnet_id
   pip_id    = azurerm_public_ip.lb-pip.id
@@ -33,7 +27,7 @@ module "avset" {
   source  = "git::https://github.com/waxb/tf-as-azure.git"
 
   location                = var.location
-  rg_name   = module.rg.name
+  rg_name   = azurerm_resource_group.rg.name
 
   availability_set_name   = "app_server_avset"
   pfdc                    = 2
@@ -53,7 +47,7 @@ module "vm_apps" {
   ssh_public_keys = var.ssh_public_keys
 
   #local definition
-  rg_name                           = module.rg.name
+  rg_name                           = azurerm_resource_group.rg.name
   vm_size                           = "Standard_B1s"
   os_acc_type                       = "Standard_LRS"
   os_disk_size                      = "10"
