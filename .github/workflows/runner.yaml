@@ -71,10 +71,25 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./provision
 
+      - name: Upload inventory as artifact
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: actions/upload-artifact@v2
+        with:
+          name: inventory
+          path: inventory
+        working-directory: ./provision
+
 #  ansible:
 #    name: "Ansible"
 #    runs-on: ubuntu-latest
 #    steps:
+
+      - name: Download inventory as artifact
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: actions/download-artifact@v2
+        with:
+          name: inventory
+
       - name: checkout repo
         uses: actions/checkout@v2
 
@@ -82,7 +97,7 @@ jobs:
         uses: arillso/action.playbook@master
         with:
           playbook: configuration/play.yaml
-          inventory: provision/inventory
+          inventory: inventory
           galaxy_file: configuration/requirements.yaml
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:
