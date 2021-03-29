@@ -5,7 +5,7 @@ on:
 
 jobs:
   terraform:
-    name: "Terraform"
+    name: "Runner"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -70,10 +70,10 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: ./provision
 
-  ansible:
-    name: "Ansible"
-    runs-on: ubuntu-latest
-    steps:
+#  ansible:
+#    name: "Ansible"
+#    runs-on: ubuntu-latest
+#    steps:
       - name: checkout repo
         uses: actions/checkout@v2
 
@@ -81,7 +81,7 @@ jobs:
         uses: arillso/action.playbook@master
         with:
           playbook: configuration/play.yaml
-          inventory: inventory
+          inventory: provision/inventory
           galaxy_file: configuration/requirements.yaml
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:
