@@ -1,6 +1,6 @@
 terraform {
   backend "remote" {
-    organization = "lhsystems"
+    organization = "lsy"
 
     workspaces {
       name = "gitops-demo-2"
