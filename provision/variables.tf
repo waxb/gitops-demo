@@ -1,3 +1,7 @@
+credentials "app.terraform.io" {
+  token = var.API_TOKEN
+}
+
 terraform {
   backend "remote" {
     organization = "lsy"
