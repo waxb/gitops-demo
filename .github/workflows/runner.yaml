@@ -76,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: inventory
-          path: ./provision/inventory
+          path: inventory
 
 #  ansible:
 #    name: "Ansible"
