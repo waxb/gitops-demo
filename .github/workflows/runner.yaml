@@ -5,7 +5,7 @@ on:
 
 jobs:
   terraform:
-    name: "Terraform"
+    name: "Runner"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,15 +20,18 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
+        working-directory: ./provision
 
       - name: Terraform Init
         id: init
         run: terraform init
+        working-directory: ./provision
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
         run: terraform plan -no-color
+        working-directory: ./provision
         continue-on-error: true
 
       - uses: actions/github-script@0.9.0
@@ -65,19 +68,20 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve
+        working-directory: ./provision
 
-  ansible:
-    name: "Ansible"
-    runs-on: ubuntu-latest
-    steps:
+#  ansible:
+#    name: "Ansible"
+#    runs-on: ubuntu-latest
+#    steps:
       - name: checkout repo
         uses: actions/checkout@v2
-        
+
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
         with:
           playbook: configuration/play.yaml
-          inventory: inventory
+          inventory: provision/inventory
           galaxy_file: configuration/requirements.yaml
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:

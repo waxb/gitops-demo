@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "rg" {
-  name      = "demo-rg"
-  location  = var.location
+  name     = "demo-rg"
+  location = var.location
 }
 
 resource "azurerm_public_ip" "lb-pip" {
@@ -24,14 +24,14 @@ module "loadbalancer" {
 }
 
 module "avset" {
-  source  = "git::https://github.com/waxb/tf-as-azure.git"
+  source = "git::https://github.com/waxb/tf-as-azure.git"
 
-  location                = var.location
-  rg_name   = azurerm_resource_group.rg.name
+  location = var.location
+  rg_name  = azurerm_resource_group.rg.name
 
-  availability_set_name   = "app_server_avset"
-  pfdc                    = 2
-  pudc                    = 2
+  availability_set_name = "app_server_avset"
+  pfdc                  = 2
+  pudc                  = 2
 }
 
 module "vm_apps" {
@@ -46,22 +46,22 @@ module "vm_apps" {
   ssh_public_keys = var.ssh_public_keys
 
   #local definition
-  rg_name                           = azurerm_resource_group.rg.name
-  vm_size                           = "Standard_B1s"
-  os_acc_type                       = "Standard_LRS"
-  os_disk_size                      = "10"
-  stg_acc_type                      = "Standard_LRS"
-  data_disk_size                    = "0"
-  data_disk_count                   = "0"
-  publisher                         = "OpenLogic"
-  offer                             = "CentOS"
-  sku                               = "7.6"
-  im_version                        = "latest"
-  dosdisk                           = "true"
-  ddadisk                           = "false"
-  disable_password_authentication   = "false"
-  backend_pool_id                   = module.loadbalancer.backend_address_pool_id
-  availability_set_id               = module.avset.availability_set_id
+  rg_name                         = azurerm_resource_group.rg.name
+  vm_size                         = "Standard_B1s"
+  os_acc_type                     = "Standard_LRS"
+  os_disk_size                    = "10"
+  stg_acc_type                    = "Standard_LRS"
+  data_disk_size                  = "0"
+  data_disk_count                 = "0"
+  publisher                       = "OpenLogic"
+  offer                           = "CentOS"
+  sku                             = "7.6"
+  im_version                      = "latest"
+  dosdisk                         = "true"
+  ddadisk                         = "false"
+  disable_password_authentication = "false"
+  backend_pool_id                 = module.loadbalancer.backend_address_pool_id
+  availability_set_id             = module.avset.availability_set_id
 
   group_name = "app_servers"
 }
