@@ -10,6 +10,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        working-directory: ./provision
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -72,7 +73,7 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v2
-        
+
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
         with:
