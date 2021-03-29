@@ -70,14 +70,16 @@ jobs:
     name: "Ansible"
     runs-on: ubuntu-latest
     steps:
+      - name: checkout repo
+        uses: actions/checkout@v2
+        
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
         with:
-          #playbook: configuration/play.yaml
+          playbook: configuration/play.yaml
           inventory: inventory
           galaxy_file: configuration/requirements.yaml
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
           ANSIBLE_DEPRECATION_WARNINGS: 'false'
-          ANSIBLE_PLAYBOOK: "./configuration/play.yaml"
