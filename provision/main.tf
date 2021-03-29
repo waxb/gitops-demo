@@ -15,7 +15,7 @@ module "loadbalancer" {
   #global definition
   rg_name   = azurerm_resource_group.rg.name
   location  = var.location
-  subnet_id = var.subnet_id
+  #subnet_id = var.subnet_id
   pip_id    = azurerm_public_ip.lb-pip.id
   #local definition
   loadbalancer_name = "APP_LOAD_BALANCER"
