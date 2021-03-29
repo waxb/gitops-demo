@@ -42,7 +42,6 @@ module "vm_apps" {
   #global definition
   location        = var.location
   vm_prefix       = "${var.vm_prefix}app"
-  subnet_id       = var.subnet_id
   admin_username  = var.admin_username
   ssh_public_keys = var.ssh_public_keys
 
