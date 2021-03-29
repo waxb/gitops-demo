@@ -13,10 +13,10 @@ resource "azurerm_public_ip" "lb-pip" {
 module "loadbalancer" {
   source = "git::https://github.com/waxb/tf-lb-azure.git"
   #global definition
-  rg_name   = azurerm_resource_group.rg.name
-  location  = var.location
+  rg_name  = azurerm_resource_group.rg.name
+  location = var.location
   #subnet_id = var.subnet_id
-  pip_id    = azurerm_public_ip.lb-pip.id
+  pip_id = azurerm_public_ip.lb-pip.id
   #local definition
   loadbalancer_name = "APP_LOAD_BALANCER"
   protocol          = "tcp"
