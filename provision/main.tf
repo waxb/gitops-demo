@@ -40,9 +40,9 @@ module "vm_apps" {
   vm_count = 2
 
   #global definition
-  location        = var.location
-  vm_prefix       = "${var.vm_prefix}app"
-  admin_username  = var.admin_username
+  location       = var.location
+  vm_prefix      = "${var.vm_prefix}app"
+  admin_username = var.admin_username
 
   #local definition
   rg_name                         = azurerm_resource_group.rg.name
