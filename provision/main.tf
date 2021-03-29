@@ -43,7 +43,6 @@ module "vm_apps" {
   location        = var.location
   vm_prefix       = "${var.vm_prefix}app"
   admin_username  = var.admin_username
-  ssh_public_keys = var.ssh_public_keys
 
   #local definition
   rg_name                         = azurerm_resource_group.rg.name
