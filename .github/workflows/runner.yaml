@@ -68,10 +68,17 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve && cat inventory && cat $TERRAFORM_CLI_PATH && ls $TERRAFORM_CLI_PATH
         working-directory: ./provision
         env:
           INV: ${process.env.INV}
+
+       - name: Upload inventory as artifact
+         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+         uses: actions/upload-artifact@v2
+         with:
+           name: inventory
+           path: ${env.TERRAFORM_CLI_PATH}/inventory
 
 #  ansible:
 #    name: "Ansible"
@@ -80,7 +87,7 @@ jobs:
 
       - name: checkout repo
         uses: actions/checkout@v2
-        
+
       - name: Export inventory
         run: echo $INV > inventory
 
