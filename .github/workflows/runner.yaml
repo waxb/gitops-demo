@@ -73,12 +73,12 @@ jobs:
         env:
           INV: ${process.env.INV}
 
-       - name: Upload inventory as artifact
-         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-         uses: actions/upload-artifact@v2
-         with:
-           name: inventory
-           path: ${env.TERRAFORM_CLI_PATH}/inventory
+      - name: Upload inventory as artifact
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: actions/upload-artifact@v2
+        with:
+          name: inventory
+          path: ${env.TERRAFORM_CLI_PATH}/inventory
 
 #  ansible:
 #    name: "Ansible"
