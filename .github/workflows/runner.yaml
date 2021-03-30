@@ -68,20 +68,8 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve && ls $TERRAFORM_CLI_PATH
+        run: terraform apply -auto-approve && ls $TERRAFORM_CLI_PATH && ls && ls / && mount
         working-directory: ./provision
-        env:
-          INV: ${{ process.env.INV }}
-
-      - name: Trace
-        run: "ls $TERRAFORM_CLI_PATH/* && echo ${{ process.env.INV }}"
-
-      - name: Upload inventory as artifact
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: actions/upload-artifact@v2
-        with:
-          name: inventory
-          path: ${env.TERRAFORM_CLI_PATH}/inventory
 
 #  ansible:
 #    name: "Ansible"
@@ -91,14 +79,11 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v2
 
-      - name: Export inventory
-        run: echo $INV && ls -la $TERRAFORM_CLI_PATH
-
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
         with:
           playbook: configuration/play.yaml
-          inventory: inventory
+          inventory: configuration/inventory
           galaxy_file: configuration/requirements.yaml
           private_key: ${{ secrets.PRIVATE_KEY }}
         env:
