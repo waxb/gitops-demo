@@ -80,6 +80,8 @@ jobs:
 
       - name: checkout repo
         uses: actions/checkout@v2
+        
+      - name: Export inventory
         run: echo $INV > inventory
 
       - name: "Play Ansible Playbook"
