@@ -3,7 +3,7 @@ terraform {
     organization = "lsy"
 
     workspaces {
-      name = "gitops-demo-2"
+      name = "gitops-demo-3"
     }
   }
 }
