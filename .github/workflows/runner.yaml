@@ -71,10 +71,10 @@ jobs:
         run: terraform apply -auto-approve && ls $TERRAFORM_CLI_PATH
         working-directory: ./provision
         env:
-          INV: ${process.env.INV}
+          INV: ${{ process.env.INV }}
 
       - name: Trace
-        run: ls $TERRAFORM_CLI_PATH/*
+        run: "ls $TERRAFORM_CLI_PATH/* && echo ${{ process.env.INV }}"
 
       - name: Upload inventory as artifact
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
@@ -92,7 +92,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Export inventory
-        run: ls /terraform && ls -la $TERRAFORM_CLI_PATH
+        run: echo $INV && ls -la $TERRAFORM_CLI_PATH
 
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
