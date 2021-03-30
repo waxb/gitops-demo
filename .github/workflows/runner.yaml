@@ -74,7 +74,7 @@ jobs:
           INV: ${process.env.INV}
 
       - name: Trace
-        run: ls $TERRAFORM_CLI_PATH
+        run: ls $TERRAFORM_CLI_PATH/*
 
       - name: Upload inventory as artifact
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
