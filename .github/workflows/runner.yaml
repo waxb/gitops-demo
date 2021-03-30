@@ -68,7 +68,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve && cat inventory && cat $TERRAFORM_CLI_PATH && ls $TERRAFORM_CLI_PATH
+        run: terraform apply -auto-approve && ls $TERRAFORM_CLI_PATH
         working-directory: ./provision
         env:
           INV: ${process.env.INV}
@@ -89,7 +89,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Export inventory
-        run: echo $INV > inventory
+        run: ls /terraform && ls -la $TERRAFORM_CLI_PATH
 
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
