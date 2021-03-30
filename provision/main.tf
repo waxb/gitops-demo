@@ -19,8 +19,8 @@ module "network" {
 module "aks" {
   source                           = "Azure/aks/azurerm"
   resource_group_name              = azurerm_resource_group.example.name
-  kubernetes_version               = "1.19.3"
-  orchestrator_version             = "1.19.3"
+  kubernetes_version               = "1.16.10"
+  orchestrator_version             = "1.16.10"
   prefix                           = "prefix"
   network_plugin                   = "azure"
   vnet_subnet_id                   = module.network.vnet_subnets[0]
