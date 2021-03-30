@@ -70,27 +70,19 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve
         working-directory: ./provision
-
-      - name: Upload inventory as artifact
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: actions/upload-artifact@v2
-        with:
-          name: inventory
-          path: /terraform/inventory
+        env:
+          INV: ${process.env.INV}
 
 #  ansible:
 #    name: "Ansible"
 #    runs-on: ubuntu-latest
 #    steps:
 
-      - name: Download inventory as artifact
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        uses: actions/download-artifact@v2
-        with:
-          name: inventory
-
       - name: checkout repo
         uses: actions/checkout@v2
+        
+      - name: Export inventory
+        run: echo $INV > inventory
 
       - name: "Play Ansible Playbook"
         uses: arillso/action.playbook@master
