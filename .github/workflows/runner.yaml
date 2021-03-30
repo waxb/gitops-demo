@@ -76,7 +76,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: inventory
-          path: inventory
+          path: /terraform/inventory
 
 #  ansible:
 #    name: "Ansible"
