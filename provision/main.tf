@@ -50,7 +50,7 @@ module "aks" {
   }
 
   network_policy                 = "azure"
-  net_profile_dns_service_ip     = "10.0.0.10"
+  net_profile_dns_service_ip     = "172.21.0.10"
   net_profile_docker_bridge_cidr = "170.10.0.1/16"
   net_profile_service_cidr       = "172.21.0.0/24"
 
