@@ -1,5 +1,0 @@
-[app_servers:vars]
-ansible_user = jedi
-[app_servers]
-52.157.164.50
-52.157.160.13

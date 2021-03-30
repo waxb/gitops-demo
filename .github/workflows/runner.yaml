@@ -68,24 +68,5 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve && ls $TERRAFORM_CLI_PATH && ls && ls / && mount
+        run: terraform apply -auto-approve
         working-directory: ./provision
-
-#  ansible:
-#    name: "Ansible"
-#    runs-on: ubuntu-latest
-#    steps:
-
-      - name: checkout repo
-        uses: actions/checkout@v2
-
-      - name: "Play Ansible Playbook"
-        uses: arillso/action.playbook@master
-        with:
-          playbook: configuration/play.yaml
-          inventory: configuration/inventory
-          galaxy_file: configuration/requirements.yaml
-          private_key: ${{ secrets.PRIVATE_KEY }}
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: 'false'
-          ANSIBLE_DEPRECATION_WARNINGS: 'false'

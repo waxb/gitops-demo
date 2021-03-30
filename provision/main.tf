@@ -1,70 +1,62 @@
-resource "azurerm_resource_group" "rg" {
-  name     = "demo-rg"
-  location = var.location
+provider "azurerm" {
+  features {}
 }
 
-resource "azurerm_public_ip" "lb-pip" {
-  name                = "lb-pip"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = var.location
-  allocation_method   = "Static"
+resource "azurerm_resource_group" "example" {
+  name     = "aks-resource-group"
+  location = "eastus"
 }
 
-module "loadbalancer" {
-  source = "git::https://github.com/waxb/tf-lb-azure.git"
-  #global definition
-  rg_name  = azurerm_resource_group.rg.name
-  location = var.location
-  #subnet_id = var.subnet_id
-  pip_id = azurerm_public_ip.lb-pip.id
-  #local definition
-  loadbalancer_name = "APP_LOAD_BALANCER"
-  protocol          = "tcp"
-  ports             = ["80"]
+module "network" {
+  source              = "Azure/network/azurerm"
+  resource_group_name = azurerm_resource_group.example.name
+  address_space       = "10.0.0.0/16"
+  subnet_prefixes     = ["10.0.1.0/24"]
+  subnet_names        = ["subnet1"]
+  depends_on          = [azurerm_resource_group.example]
 }
 
-module "avset" {
-  source = "git::https://github.com/waxb/tf-as-azure.git"
-
-  location = var.location
-  rg_name  = azurerm_resource_group.rg.name
-
-  availability_set_name = "app_server_avset"
-  pfdc                  = 2
-  pudc                  = 2
+data "azuread_group" "aks_cluster_admins" {
+  name = "AKS-cluster-admins"
 }
 
-module "vm_apps" {
-  source = "git::https://github.com/waxb/tf-vm-ans-azure.git"
+module "aks" {
+  source                           = "Azure/aks/azurerm"
+  resource_group_name              = azurerm_resource_group.example.name
+  kubernetes_version               = "1.19.3"
+  orchestrator_version             = "1.19.3"
+  prefix                           = "prefix"
+  network_plugin                   = "azure"
+  vnet_subnet_id                   = module.network.vnet_subnets[0]
+  os_disk_size_gb                  = 50
+  sku_tier                         = "Free"
+  enable_role_based_access_control = true
+  rbac_aad_admin_group_object_ids  = [data.azuread_group.aks_cluster_admins.id]
+  rbac_aad_managed                 = true
+  private_cluster_enabled          = true # default value
+  enable_http_application_routing  = true
+  enable_azure_policy              = true
+  enable_auto_scaling              = true
+  agents_min_count                 = 1
+  agents_max_count                 = 2
+  agents_count                     = null # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
+  agents_max_pods                  = 100
+  agents_pool_name                 = "exnodepool"
+  agents_availability_zones        = ["1", "2"]
+  agents_type                      = "VirtualMachineScaleSets"
 
-  vm_count = 2
+  agents_labels = {
+    "nodepool" : "defaultnodepool"
+  }
 
-  #global definition
-  location       = var.location
-  vm_prefix      = "${var.vm_prefix}app"
-  admin_username = var.admin_username
+  agents_tags = {
+    "Agent" : "defaultnodepoolagent"
+  }
 
-  #local definition
-  rg_name                         = azurerm_resource_group.rg.name
-  vm_size                         = "Standard_B1s"
-  os_acc_type                     = "Standard_LRS"
-  os_disk_size                    = "10"
-  stg_acc_type                    = "Standard_LRS"
-  data_disk_size                  = "0"
-  data_disk_count                 = "0"
-  publisher                       = "OpenLogic"
-  offer                           = "CentOS"
-  sku                             = "7.6"
-  im_version                      = "latest"
-  dosdisk                         = "true"
-  ddadisk                         = "false"
-  disable_password_authentication = "false"
-  backend_pool_id                 = module.loadbalancer.backend_address_pool_id
-  availability_set_id             = module.avset.availability_set_id
+  network_policy                 = "azure"
+  net_profile_dns_service_ip     = "10.0.0.10"
+  net_profile_docker_bridge_cidr = "170.10.0.1/16"
+  net_profile_service_cidr       = "10.0.0.0/16"
 
-  group_name = "app_servers"
-}
-
-output "lb-pip-out" {
-  value = azurerm_public_ip.lb-pip.ip_address
+  depends_on = [module.network]
 }
