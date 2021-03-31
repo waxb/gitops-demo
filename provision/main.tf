@@ -36,7 +36,7 @@ module "aks" {
   agents_min_count                 = 1
   agents_max_count                 = 2
   agents_count                     = null # Please set `agents_count` `null` while `enable_auto_scaling` is `true` to avoid possible `agents_count` changes.
-  agents_max_pods                  = 110
+  agents_max_pods                  = 100
   agents_pool_name                 = "exnodepool"
   agents_availability_zones        = ["1", "2"]
   agents_type                      = "VirtualMachineScaleSets"
