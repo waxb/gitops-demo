@@ -1,0 +1,7 @@
+- hosts: app_servers
+  become: yes
+  become_user: root
+  become_method: sudo
+
+  roles:
+     - ans_rol_apache
